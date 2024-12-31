@@ -5,12 +5,12 @@ import cors from "cors";
 import AuthRouter from "../server/router/user/authRouter.js"; 
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import ProductRouter from "../server/router/admin/productRouter.js"
+import AdminProductRouter from "../server/router/admin/productRouter.js"
 import { notFound } from "./middleware/notFound.js";
 import OrderRouter from "./router/admin/orderRouter.js"
 import CartRouter from "./router/shop/cartRouter.js"
 import AddressRouter from "./router/shop/addressRouter.js"
-
+import ShopProdcutRouter from "./router/shop/productRouter.js"
 
 dotenv.config();
 
@@ -39,10 +39,11 @@ app.use("/api/test", (req, res) => {
 });
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/admin/product", ProductRouter);
+app.use("/api/admin/product", AdminProductRouter);
 app.use("/api/admin/order", OrderRouter);
 app.use("/api/shop/cart", CartRouter);
 app.use("/api/shop/address", AddressRouter);
+app.use("/api/shop/products", ShopProdcutRouter)
 
 
 app.use(notFound)
