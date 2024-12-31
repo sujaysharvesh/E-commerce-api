@@ -1,16 +1,35 @@
 import mongoose from "mongoose";
 
-
 const AddressSchema = new mongoose.Schema(
-    {
-      userId: String,
-      address: String,
-      city: String,
-      pincode: String,
-      phone: String,
-      notes: String,
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    { timestamps: true }
-  );
-  
-  module.exports = mongoose.model("Address", AddressSchema);
+    address: {
+      type: String,
+      required: true,
+      trim: true, 
+      maxlength: 255, 
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    pincode: {
+      type: String,
+      required: true,
+      match: /^\d{6}$/, 
+    },
+    phone: {
+      type: String,
+      required: true,
+      match: /^\d{10}$/, 
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("Address", AddressSchema);
