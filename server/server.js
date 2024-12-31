@@ -8,6 +8,10 @@ import swaggerUi from "swagger-ui-express";
 import ProductRouter from "../server/router/admin/productRouter.js"
 import { notFound } from "./middleware/notFound.js";
 import OrderRouter from "./router/admin/orderRouter.js"
+import CartRouter from "./router/shop/cartRouter.js"
+
+
+
 dotenv.config();
 
 const app = express();
@@ -37,6 +41,7 @@ app.use("/api/test", (req, res) => {
 app.use("/api/auth", AuthRouter);
 app.use("/api/admin/product", ProductRouter);
 app.use("/api/admin/order", OrderRouter);
+app.use("/api/shop/cart", CartRouter);
 
 
 app.use(notFound)
