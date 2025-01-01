@@ -11,6 +11,8 @@ import OrderRouter from "./router/admin/orderRouter.js"
 import CartRouter from "./router/shop/cartRouter.js"
 import AddressRouter from "./router/shop/addressRouter.js"
 import ShopProdcutRouter from "./router/shop/productRouter.js"
+import SearchRouter from "./router/shop/searchRouter.js"
+import ReviewRouter from "./router/shop/reviewRouter.js"
 
 dotenv.config();
 
@@ -44,8 +46,8 @@ app.use("/api/admin/order", OrderRouter);
 app.use("/api/shop/cart", CartRouter);
 app.use("/api/shop/address", AddressRouter);
 app.use("/api/shop/products", ShopProdcutRouter)
-
-
+app.use("api/shop/search", SearchRouter)
+app.use("/api/shop/review", ReviewRouter)
 app.use(notFound)
 
 const startServer = async () => {
