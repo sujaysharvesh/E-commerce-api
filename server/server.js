@@ -13,6 +13,7 @@ import AddressRouter from "./router/shop/addressRouter.js"
 import ShopProdcutRouter from "./router/shop/productRouter.js"
 import SearchRouter from "./router/shop/searchRouter.js"
 import ReviewRouter from "./router/shop/reviewRouter.js"
+import ShopOrderRouter from "./router/shop/orderRouter.js"
 
 dotenv.config();
 
@@ -48,6 +49,9 @@ app.use("/api/shop/address", AddressRouter);
 app.use("/api/shop/products", ShopProdcutRouter)
 app.use("api/shop/search", SearchRouter)
 app.use("/api/shop/review", ReviewRouter)
+app.use("/api/shop/order", ShopOrderRouter)
+
+
 app.use(notFound)
 
 const startServer = async () => {

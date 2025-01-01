@@ -19,7 +19,7 @@ const OrderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        title: {
+        productName: {
           type: String,
           required: true,
         },
