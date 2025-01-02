@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import Address from "../../models/address.js"
-import user from "../../models/user.js";
 
 
-export const addAddress = async(req, res) => {
+export const AddAddress = async(req, res) => {
     try{
-        const { userId, addressDetail , city, pincode, phone } = req.body;
-        if(!userId || !addressDetail || !city || !pincode || !phone ){
+        const userId = req.user.userId;
+        const { addressDetail , city, pincode, phone } = req.body;
+        if(!addressDetail || !city || !pincode || !phone ){
             res.status(StatusCodes.NOT_ACCEPTABLE).json({message: "Someting missiong"})
         }
         const pincoderRegex = /^\d{6}$/;
@@ -34,7 +34,8 @@ export const addAddress = async(req, res) => {
 
 export const updateAddress = async(req, res) => {
     try{
-        const { userId, addressId } = req.params
+        const userId = req.user.userId;
+        const { addressId } = req.params;
         const formData = req.body;
         if(!userId || !addressId){
             res.status(StatusCodes.BAD_REQUEST).json({message: "user and address id is required"})
@@ -59,7 +60,7 @@ export const updateAddress = async(req, res) => {
 
 export const getUserAllAddress = async(req, res) => {
     try{
-        const { userId } = req.body;
+        const userId = req.user.userId;
         if(!userId){
             res.status(StatusCodes.BAD_GATEWAY).json({message: "UserId is required"})
         }

@@ -14,11 +14,14 @@ import ShopProdcutRouter from "./router/shop/productRouter.js"
 import SearchRouter from "./router/shop/searchRouter.js"
 import ReviewRouter from "./router/shop/reviewRouter.js"
 import ShopOrderRouter from "./router/shop/orderRouter.js"
+import { AdminMiddleware, AuthMiddleware } from "./middleware/authMiddleware.js";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+console.log("Swagger files path:", path.resolve("./router/**/*.js"));
 
 app.use(cors({
     origin: "http://localhost:5173",  
@@ -32,7 +35,23 @@ app.use(cors({
     ],
     credentials: true,
 }));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc));
+
+const swaggerDefinition = {
+    openapi: "3.0.0",
+    info: {
+      title: "API Documentation",
+      version: "1.0.0",
+      description: "API Documentation for the E-Commerce App",
+    },
+    servers: [{ url: process.env.CLIENT_URL || "http://localhost:8000" }],
+  };
+  
+const swaggerOptions = {
+    swaggerDefinition,
+    apis: ["./router/**/*.js"],
+  };
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/test", (req, res) => {
     try {
         res.send("Hello World");
@@ -42,14 +61,14 @@ app.use("/api/test", (req, res) => {
 });
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/admin/product", AdminProductRouter);
-app.use("/api/admin/order", OrderRouter);
-app.use("/api/shop/cart", CartRouter);
-app.use("/api/shop/address", AddressRouter);
+app.use("/api/admin/product",AuthMiddleware, AdminMiddleware, AdminProductRouter);
+app.use("/api/admin/order",AuthMiddleware, AdminMiddleware, OrderRouter);
+app.use("/api/shop/cart",AuthMiddleware, CartRouter);
+app.use("/api/shop/address",AuthMiddleware, AddressRouter);
 app.use("/api/shop/products", ShopProdcutRouter)
-app.use("api/shop/search", SearchRouter)
-app.use("/api/shop/review", ReviewRouter)
-app.use("/api/shop/order", ShopOrderRouter)
+app.use("/api/shop/search", SearchRouter)
+app.use("/api/shop/review",AuthMiddleware,  ReviewRouter)
+app.use("/api/shop/order",AuthMiddleware, ShopOrderRouter)
 
 
 app.use(notFound)

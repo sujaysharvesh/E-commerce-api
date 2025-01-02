@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
       required: [true, "please Provide a password"],
       minlength: 8,
     },
-    user:{
+    role:{
       type:String,
       default: "user"
     },
@@ -56,7 +56,7 @@ const UserSchema = new mongoose.Schema({
   
   UserSchema.methods.createJWT = function () {
     return Jwt.sign(
-      { userID: this._id, username: this.username },
+      { userID: this._id, username: this.username, role: this.role },
       process.env.JWT_TOKEN,
       { expiresIn: process.env.JWT_LIFETIME }
     );

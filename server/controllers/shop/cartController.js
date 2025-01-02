@@ -6,7 +6,6 @@ export const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
 
-    // Validate inputs
     if (!userId || !productId || quantity <= 0) {
       return res
         .status(StatusCodes.NOT_ACCEPTABLE)
