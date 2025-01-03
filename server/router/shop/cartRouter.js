@@ -1,12 +1,14 @@
 import express from "express";
-import { addToCart, fetchCartItems, updateCartItemQty } from "../../controllers/shop/cartController.js";
+import { addToCart, fetchCartItems, removeProductFromCart, updateCartItemQty } from "../../controllers/shop/cartController.js";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/shop/cart/{userId}:
+ * /api/shop/cart/:
  *   get:
+ *     tags:
+ *          - Cart
  *     summary: Get all cart items of a user
  *     description: Fetches all the items in the cart for the specified user.
  *     parameters:
@@ -43,12 +45,14 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error
  */
-router.get("/:userId", fetchCartItems);
+router.get("/", fetchCartItems);
 
 /**
  * @swagger
  * /api/shop/cart/addtocart:
  *   post:
+ *     tags:
+ *          - Cart
  *     summary: Add a product to the cart
  *     description: Adds a product to the user's cart with the specified quantity.
  *     requestBody:
@@ -81,6 +85,8 @@ router.post("/addtocart", addToCart);
  * @swagger
  * /api/shop/cart/updatecart/{userId}:
  *   patch:
+ *     tags:
+ *          - Cart
  *     summary: Update the quantity of an item in the cart
  *     description: Updates the quantity of a specific product in the cart for the given user.
  *     parameters:
@@ -113,7 +119,9 @@ router.post("/addtocart", addToCart);
  *       500:
  *         description: Internal Server Error
  */
-router.patch("/updatecart/:userId", updateCartItemQty);
+router.patch("/updatecart", updateCartItemQty);
+
+router.patch("/remove-product", removeProductFromCart);
 
 export default router;
 

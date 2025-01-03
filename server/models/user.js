@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
     },
     role:{
       type:String,
+      enum: ["user", "admin"],
       default: "user"
     },
     createdAt: {
@@ -45,7 +46,20 @@ const UserSchema = new mongoose.Schema({
       next(err); 
     }
   });
-  
+
+  UserSchema.pre("findOneAndUpdate", async function (next) {
+    try {
+        const update = this.getUpdate();
+        if (update.password) {
+            const salt = await bcrypt.genSalt(12);
+            update.password = await bcrypt.hash(update.password, salt);
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
   UserSchema.methods.comparePassword = async function (candidatePassword) {
     try {
       return await bcrypt.compare(candidatePassword, this.password);
@@ -60,6 +74,14 @@ const UserSchema = new mongoose.Schema({
       process.env.JWT_TOKEN,
       { expiresIn: process.env.JWT_LIFETIME }
     );
+  }
+
+  UserSchema.methods.generatePasswordResetToken = function () {
+    return Jwt.sign(
+      { email: this.email },
+      process.env.JWT_TOKEN,
+      { expiresIn: "10m"}
+    )
   }
 
 export default mongoose.model("User", UserSchema);

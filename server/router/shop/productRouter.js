@@ -7,6 +7,8 @@ const router = express.Router();
  * @swagger
  * /api/shop/products/get:
  *   get:
+ *     tags:
+ *         - Products
  *     summary: Get filtered products
  *     description: Fetch products based on applied filters (like category, price, etc.)
  *     parameters:
@@ -56,6 +58,8 @@ router.get("/get", getFilteredProduct);
  * @swagger
  * /api/shop/products/get/{productId}:
  *   get:
+ *     tags:
+ *         - Products
  *     summary: Get product details
  *     description: Fetch detailed information of a specific product.
  *     parameters:

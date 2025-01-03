@@ -7,6 +7,8 @@ const router = Express.Router();
  * @swagger
  * /api/shop/search/{keywords}:
  *   get:
+ *     tags: 
+ *          - Search
  *     summary: Search products by keywords
  *     description: Use keywords to search for products in the shop.
  *     parameters:

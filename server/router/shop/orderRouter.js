@@ -12,6 +12,8 @@ const router = express.Router();
  * @swagger
  * /api/shop/order/create:
  *   get:
+ *     tags: 
+ *          - Order
  *     summary: Create a new order
  *     description: Creates a new order based on the user's cart and other provided information.
  *     parameters:
@@ -50,6 +52,8 @@ router.get("/create", createOrder);
  * @swagger
  * /api/shop/order/capture:
  *   post:
+ *     tags: 
+ *          - Order
  *     summary: Capture payment for an order
  *     description: Captures the payment for an order after the payment has been approved.
  *     requestBody:
@@ -79,6 +83,8 @@ router.post("/capture", capturePayment);
  * @swagger
  * /api/shop/order/list/{userId}:
  *   get:
+ *     tags: 
+ *          - Order
  *     summary: Get all orders of a user
  *     description: Retrieves all orders placed by a specific user.
  *     parameters:
@@ -116,6 +122,8 @@ router.get("/list/:userId", getAllOrderByuser);
  * @swagger
  * /api/shop/order/details/{orderid}:
  *   get:
+ *     tags: 
+ *          - Order
  *     summary: Get details of a specific order
  *     description: Retrieves detailed information about a specific order using its order ID.
  *     parameters:

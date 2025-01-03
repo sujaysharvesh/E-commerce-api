@@ -7,8 +7,12 @@ const router = Express.Router()
  * @swagger
  * /api/admin/order/allorders:
  *   get:
+ *     tags: 
+ *         - Admin
  *     summary: Get all orders from all users
  *     description: This endpoint retrieves all the orders placed by all users.
+ *     security:
+ *         - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of orders from all users

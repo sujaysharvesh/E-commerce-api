@@ -1,5 +1,6 @@
 import express  from "express";
-import { LoginUser, UserRegister } from "../../controllers/user/authController.js";
+import { LogOut, LoginUser, UserRegister, forgotPassword, resetPassword, testMail } from "../../controllers/user/authController.js";
+import { AuthMiddleware } from "../../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -7,6 +8,8 @@ const router = express.Router();
  * @swagger
  * /api/auth/register:
  *   post:
+ *     tags: 
+ *          - User
  *     summary: Register a new user
  *     description: This endpoint allows a new user to register by providing username, email, and password.
  *     requestBody:
@@ -42,6 +45,8 @@ router.post('/register', UserRegister);
  * @swagger
  * /api/auth/login:
  *   post:
+ *     tags: 
+ *          - User
  *     summary: Login a user
  *     description: This endpoint allows an existing user to login by providing email and password.
  *     requestBody:
@@ -77,5 +82,29 @@ router.post('/register', UserRegister);
  *         description: Internal Server Error
  */
 router.post('/login', LoginUser);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logs out the user and invalidates the session.
+ *     description: This endpoint logs out the user by removing the authentication token and invalidating the session.
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *       400:
+ *         description: Invalid or missing token
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/logout",AuthMiddleware, LogOut);
+
+router.post("/testmail", testMail);
+
+router.post("/forgot-password",AuthMiddleware,  forgotPassword);
+
+router.post('/reset-password/:token', resetPassword);
 
 export default router;

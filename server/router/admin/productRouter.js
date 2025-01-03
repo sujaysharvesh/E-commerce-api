@@ -8,8 +8,12 @@ const router = express.Router();
  * @swagger
  * /api/admin/product:
  *   get:
+ *     tags: 
+ *         - Admin
  *     summary: Get all products
  *     description: Fetches all the products from the database.
+ *     security:
+ *         - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of products
@@ -38,8 +42,12 @@ router.get('/', GetAllProduct);
  * @swagger
  * /api/admin/product/static:
  *   get:
+ *     tags: 
+ *         - Admin
  *     summary: Get static products
  *     description: Fetches a static list of products, possibly from a predefined source or file.
+ *     security:
+ *         - BearerAuth: []
  *     responses:
  *       200:
  *         description: A static list of products
@@ -68,8 +76,12 @@ router.get('/static', GetProducts);
  * @swagger
  * /api/admin/product/addproduct:
  *   post:
+ *     tags: 
+ *         - Admin
  *     summary: Add a new product
  *     description: Allows the admin to add a new product to the database, including uploading an image.
+ *     security:
+ *         - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -103,8 +115,12 @@ router.post('/addproduct', upload, AddProduct);
  * @swagger
  * /api/admin/product/{ProductId}:
  *   patch:
+ *     tags: 
+ *         - Admin
  *     summary: Update a product
  *     description: Updates the details of a specific product based on its product ID.
+ *     security:
+ *         - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: ProductId
@@ -143,8 +159,12 @@ router.patch('/:ProductId', UpdateProduct);
  * @swagger
  * /api/admin/product/{ProductId}:
  *   delete:
+ *     tags: 
+ *         - Admin
  *     summary: Delete a product
  *     description: Deletes a product based on its product ID.
+ *     security:
+ *         - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: ProductId

@@ -7,6 +7,8 @@ const router = express.Router();
  * @swagger
  * /api/shop/address:
  *   get:
+ *     tags:
+ *         - User Address
  *     summary: Get all addresses of a user
  *     description: Fetches all the addresses associated with the authenticated user.
  *     responses:
@@ -42,6 +44,8 @@ router.get("/", getUserAllAddress);
  * @swagger
  * /api/shop/address/addAddress:
  *   post:
+ *     tags:
+ *         - User Address
  *     summary: Add a new address
  *     description: Adds a new address to the authenticated user's profile.
  *     requestBody:
@@ -77,6 +81,8 @@ router.post("/addAddress", AddAddress);
  * @swagger
  * /api/shop/address/{addressId}:
  *   patch:
+ *     tags:
+ *         - User Address
  *     summary: Update an existing address
  *     description: Updates the details of an address based on the provided address ID.
  *     parameters:
@@ -121,6 +127,8 @@ router.patch("/:addressId", updateAddress);
  * @swagger
  * /api/shop/address/{addressId}:
  *   delete:
+ *     tags:
+ *         - User Address
  *     summary: Delete an address
  *     description: Deletes an address based on the provided address ID.
  *     parameters:

@@ -8,7 +8,6 @@ const ProductSchema = new mongoose.Schema({
   productName: {
     type: String,
     required: true,
-    maxlength: 30,
   },
   price: {
     type: Number,

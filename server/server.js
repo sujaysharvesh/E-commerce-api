@@ -21,7 +21,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-console.log("Swagger files path:", path.resolve("./router/**/*.js"));
+
 
 app.use(cors({
     origin: "http://localhost:5173",  
@@ -44,6 +44,20 @@ const swaggerDefinition = {
       description: "API Documentation for the E-Commerce App",
     },
     servers: [{ url: process.env.CLIENT_URL || "http://localhost:8000" }],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT", 
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [], 
+      },
+    ],
   };
   
 const swaggerOptions = {
@@ -51,7 +65,22 @@ const swaggerOptions = {
     apis: ["./router/**/*.js"],
   };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: "My E-Commerce API", // Optional: change the title
+    swaggerOptions: {
+      authAction: {
+        BearerAuth: {
+          name: "Bearer Authorization",
+          schema: {
+            type: "apiKey",
+            in: "header",
+            name: "Authorization",
+          },
+          value: "",  
+        },
+      },
+    },
+  }));
 app.use("/api/test", (req, res) => {
     try {
         res.send("Hello World");
