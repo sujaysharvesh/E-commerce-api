@@ -46,38 +46,9 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error
  */
-router.get("/create", createOrder);
+router.get("/", createOrder);
 
-/**
- * @swagger
- * /api/shop/order/capture:
- *   post:
- *     tags: 
- *          - Order
- *     summary: Capture payment for an order
- *     description: Captures the payment for an order after the payment has been approved.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               paymentId:
- *                 type: string
- *               payerId:
- *                 type: string
- *               orderId:
- *                 type: string
- *     responses:
- *       200:
- *         description: Payment captured successfully
- *       400:
- *         description: Bad Request (Invalid payment or order ID)
- *       500:
- *         description: Internal Server Error
- */
-router.post("/capture", capturePayment);
+
 
 /**
  * @swagger
@@ -116,57 +87,9 @@ router.post("/capture", capturePayment);
  *       500:
  *         description: Internal Server Error
  */
-router.get("/list/:userId", getAllOrderByuser);
+router.get("/list", getAllOrderByuser);
 
-/**
- * @swagger
- * /api/shop/order/details/{orderid}:
- *   get:
- *     tags: 
- *          - Order
- *     summary: Get details of a specific order
- *     description: Retrieves detailed information about a specific order using its order ID.
- *     parameters:
- *       - in: path
- *         name: orderid
- *         required: true
- *         description: The unique identifier of the order
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Order details retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 orderId:
- *                   type: string
- *                 orderDate:
- *                   type: string
- *                   format: date-time
- *                 orderStatus:
- *                   type: string
- *                 items:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       productId:
- *                         type: string
- *                       quantity:
- *                         type: number
- *                       price:
- *                         type: number
- *                       total:
- *                         type: number
- *       400:
- *         description: Bad Request (Invalid order ID)
- *       500:
- *         description: Internal Server Error
- */
-router.get("/details/:orderid", getOrderDetail);
+
 
 export default router;
 

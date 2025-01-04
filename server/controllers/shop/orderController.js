@@ -1,83 +1,83 @@
 import StatusCodes  from "http-status-codes";
-import client  from "../../utils/paypal.js";
 import order from "../../models/order.js";
 import Product from "../../models/Product.js";
 import cart from "../../models/cart.js";
+import address from "../../models/address.js";
+
 
 export const createOrder = async (req, res) => {
   try {
-    const {
-      userId,
-      cartItems,
-      addressInfo,
-      orderStatus,
-      paymentMethod,
-      paymentStatus,
-      totalAmount, // Corrected typo
-      orderData,
-      orderUpdateDate,
-      paymentId,
-      payerId,
-      cartId,
-    } = req.body;
+    const userId = req.user.userId;
+    const userCart = await cart.findOne({ userId }).populate("items.productId");
+    if (!userCart || !userCart.items.length) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Cart not found or empty" });
+    }
 
-    const create_payment_json = {
-      intent: "sale",
-      payer: {
-        payment_method: "paypal",
-      },
-      redirect_urls: {
-        return_url: "http://localhost:5173/success",
-        cancel_url: "http://localhost:5173/cancel",
-      },
-      transactions: [
-        {
-          item_list: {
-            items: cartItems.map((item) => ({
-              name: item.name,
-              sku: item._id,
-              price: item.price,
-              currency: "USD",
-              quantity: item.quantity,
-            })),
-          },
-          amount: {
-            currency: "USD",
-            total: totalAmount.toFixed(2), 
-          },
-          description: "This is the payment description.",
-        },
-      ],
-    };
+    if (userCart.items.some((item) => !item.productId)) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "One or more cart items are missing productId" });
+    }
+    const userAddress = await address.findOne({ userId });
+    if (!userAddress) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Address not found" });
+    }
 
-    client.payment.create(create_payment_json, async (error, paymentInfo) => {
-      if (error) {
-        console.log(error);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Error while creating payment" });
-      } else {s
-        const newlyCreatedOrder = await order.create({
-          userId,
-          cartItems,
-          addressInfo,
-          orderStatus,
-          paymentMethod,
-          paymentStatus,
-          totalAmount,
-          orderData,
-          orderUpdateDate,
-          paymentId,
-          payerId,
-          cartId,
-        });
-        const approvalUrl = paymentInfo.links.find((link) => link.rel === "approval_url").href;
-        res.status(StatusCodes.CREATED).json({ approvalUrl, order_id: newlyCreatedOrder._id });
+    const cartItems = userCart.items.map((item) => ({
+      productId: item.productId._id,
+      productName: item.productId.productName || "Unknown Product",
+      price: item.productId.salePrice || 0,
+      quantity: item.quantity || 1,
+    }));
+
+    for (const item of userCart.items) {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        item.productId._id,
+        { $inc: { totalStock: -item.quantity } },
+        { new: true } // Return updated document
+      );
+
+      if (!updatedProduct) {
+        throw new Error(`Product not found: ${item.productId.productName}`);
       }
+
+      if (updatedProduct.totalStock < 0) {
+        throw new Error(
+          `Insufficient stock for product: ${updatedProduct.productName}. Available stock: ${
+            updatedProduct.totalStock + item.quantity
+          }`
+        );
+      }
+    }
+  
+    const newOrder = await order.create({
+      userId: userId,
+      cartItems: cartItems,
+      addressInfo: {
+        addressId: userAddress._id,
+        address: userAddress.address,
+        city: userAddress.city,
+        pincode: userAddress.pincode,
+        phone: userAddress.phone,
+      },
+      totalAmount: userCart.total.toFixed(2),
+    });
+
+    const deletedCart = await cart.findByIdAndDelete(userCart._id);
+
+    res.status(StatusCodes.CREATED).json({
+      message: "Order created successfully",
+      data: newOrder,
     });
   } catch (err) {
-    console.error(err);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Something went wrong" });
+    console.error("Error creating order:", err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+      error: err.message,
+    });
   }
 };
+
 
 
 export const capturePayment = async (req, res) => {
@@ -110,7 +110,7 @@ export const capturePayment = async (req, res) => {
 
 export const getAllOrderByuser = async(req, res) => {
     try{
-        const { userId } = req.params;
+        const userId = req.user.userId;
         const orders = await order.find({userId: userId});
         if(!orders){
             return res.status(StatusCodes.NOT_FOUND).json({message: "No order found"})

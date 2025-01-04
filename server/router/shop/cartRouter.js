@@ -121,6 +121,85 @@ router.post("/addtocart", addToCart);
  */
 router.patch("/updatecart", updateCartItemQty);
 
+/**
+ * @swagger
+ * /remove-product:
+ *   patch:
+ *     summary: Remove a product from the cart
+ *     description: This endpoint removes a specific product from the user's cart based on the provided product ID and user details.
+ *     tags:
+ *       - Cart
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: string
+ *                 description: The ID of the product to remove from the cart.
+ *                 example: "64a7f7d3a6f4bca77cdef456"
+ *               quantity:
+ *                 type: number
+ *                 description: The quantity of the product to remove.
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Product removed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Product removed from cart successfully
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Invalid product ID or quantity
+ *       404:
+ *         description: Product not found in cart
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Product not found in cart
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong
+ */
+router.patch("/remove-product", removeProductFromCart);
+
 router.patch("/remove-product", removeProductFromCart);
 
 export default router;

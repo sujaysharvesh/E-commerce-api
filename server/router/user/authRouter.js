@@ -101,10 +101,149 @@ router.post('/login', LoginUser);
  */
 router.post("/logout",AuthMiddleware, LogOut);
 
-router.post("/testmail", testMail);
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Request password reset
+ *     description: This endpoint allows a user to request a password reset by providing their email address.
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email address to send the password reset link.
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Password reset link sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset link sent to your email"
+ *       400:
+ *         description: Invalid email address
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid email address"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Something went wrong"
+ */
 
 router.post("/forgot-password",AuthMiddleware,  forgotPassword);
-
+/**
+ * @swagger
+ * api/auth/reset-password/{token}:
+ *   post:
+ *     summary: Reset password using token
+ *     description: This endpoint allows a user to reset their password using the token received via email.
+ *     tags:
+ *       - Authentication
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         description: The token received in the password reset email.
+ *         schema:
+ *           type: string
+ *           example: "abcd1234reset-token"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password to set for the user.
+ *                 example: "newSecurePassword123!"
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset successful"
+ *       400:
+ *         description: Invalid or expired token, or weak password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid token or weak password"
+ *       404:
+ *         description: Token not found or expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token expired or invalid"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Something went wrong"
+ */
 router.post('/reset-password/:token', resetPassword);
 
 export default router;

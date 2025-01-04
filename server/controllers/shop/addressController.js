@@ -88,7 +88,7 @@ export const getAllAddress = async(req, res) => {
 export const deleteAddress = async(req, res) => {
     try{
         const { addressId } = req.body;
-        if(!addAddress){
+        if(!addressId){
             res.status(StatusCodes.BAD_REQUEST).json({message: "Address Id is required"})
         }
         const userAddress = await Address.findByIdAndDelete({addressId})

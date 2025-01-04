@@ -7,11 +7,6 @@ const OrderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    cartId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Cart",
-      required: true,
-    },
     cartItems: [
       {
         productId: {
@@ -62,21 +57,6 @@ const OrderSchema = new mongoose.Schema(
         type: String,
       },
     },
-    orderStatus: {
-      type: String,
-      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-      default: "Pending",
-    },
-    paymentMethod: {
-      type: String,
-      enum: ["Credit Card", "Debit Card", "PayPal", "COD"],
-      required: true,
-    },
-    paymentStatus: {
-      type: String,
-      enum: ["Pending", "Completed", "Failed"],
-      default: "Pending",
-    },
     totalAmount: {
       type: Number,
       required: true,
@@ -89,12 +69,6 @@ const OrderSchema = new mongoose.Schema(
     orderUpdateDate: {
       type: Date,
       default: Date.now,
-    },
-    paymentId: {
-      type: String,
-    },
-    payerId: {
-      type: String,
     },
   },
   {
