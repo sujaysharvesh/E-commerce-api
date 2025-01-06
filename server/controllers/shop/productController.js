@@ -3,7 +3,7 @@ import Product from "../../models/Product.js"
 
 export const getFilteredProduct = async(req, res) => {
     try{
-        const { category=[], brand=[], sortBy= "price-lowToHigh"} = req.quary;
+        const { category=[], brand=[], sortBy= "price-lowToHigh"} = req.body;
     let filters = {};
     if(category.length){
         filters.category = { $in: category.split(",")}

@@ -18,11 +18,6 @@ const router = express.Router();
  *         schema:
  *           type: string
  *       - in: query
- *         name: price
- *         description: The price range to filter by
- *         schema:
- *           type: string
- *       - in: query
  *         name: brand
  *         description: The brand to filter by
  *         schema:

@@ -2,20 +2,21 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import AuthRouter from "../server/router/user/authRouter.js"; 
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import AdminProductRouter from "../server/router/admin/productRouter.js"
+
+import AuthRouter from "./router/user/authRouter.js";
+import AdminProductRouter from "./router/admin/productRouter.js";
+import OrderRouter from "./router/admin/orderRouter.js"; 
+import CartRouter from "./router/shop/cartRouter.js"; 
+import AddressRouter from "./router/shop/addressRouter.js"; 
+import ShopProdcutRouter from "./router/shop/productRouter.js"; 
+import SearchRouter from "./router/shop/searchRouter.js"; 
+import ReviewRouter from "./router/shop/reviewRouter.js"; 
+import ShopOrderRouter from "./router/shop/orderRouter.js"; 
+
 import { notFound } from "./middleware/notFound.js";
-import OrderRouter from "./router/admin/orderRouter.js"
-import CartRouter from "./router/shop/cartRouter.js"
-import AddressRouter from "./router/shop/addressRouter.js"
-import ShopProdcutRouter from "./router/shop/productRouter.js"
-import SearchRouter from "./router/shop/searchRouter.js"
-import ReviewRouter from "./router/shop/reviewRouter.js"
-import ShopOrderRouter from "./router/shop/orderRouter.js"
 import { AdminMiddleware, AuthMiddleware } from "./middleware/authMiddleware.js";
-import path from "path";
 
 dotenv.config();
 
@@ -23,18 +24,7 @@ const app = express();
 app.use(express.json());
 
 
-app.use(cors({
-    origin: "http://localhost:5173",  
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "Cache-Control",  
-        "Expires",
-        "Pragma",
-    ],
-    credentials: true,
-}));
+app.use(cors())
 
 const swaggerDefinition = {
     openapi: "3.0.0",
@@ -66,7 +56,7 @@ const swaggerOptions = {
   };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    customSiteTitle: "My E-Commerce API", // Optional: change the title
+    customSiteTitle: "My E-Commerce API", 
     swaggerOptions: {
       authAction: {
         BearerAuth: {
@@ -88,6 +78,16 @@ app.use("/api/test", (req, res) => {
         res.status(500).send({ error: "Internal Server Error" });
     }
 });
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+// Recreate __dirname and __filename
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log('Current directory:', __dirname);
+;
+
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/admin/product",AuthMiddleware, AdminMiddleware, AdminProductRouter);

@@ -3,41 +3,54 @@ import User from "../../models/user.js";
 import redis from "../../utils/redis.js";
 import { mailSender } from "../../utils/mail.js";
 import Jwt from "jsonwebtoken";
-import  users  from "../../models/datas.js";
 
 export const UserRegister = async (req, res) => {
   try {
     const { username, email, password, confirmPassword, role } = req.body;
 
+    // Validate passwords
     if (password !== confirmPassword) {
-      res
+      return res
         .status(StatusCodes.NOT_ACCEPTABLE)
         .json({ message: "Passwords do not match" });
     }
+
+    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(StatusCodes.CONFLICT).json({ message: "User already exists" });
+      return res
+        .status(StatusCodes.CONFLICT)
+        .json({ message: "User already exists" });
     }
+
+    // Validate role
     if (role !== "admin" && role !== "user") {
-      res
+      return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Role must be either 'admin' or 'user" });
+        .json({ message: "Role must be either 'admin' or 'user'" });
     }
+
+    // Create the new user
     const newUser = await User.create({
       username,
       email,
       password,
       role,
     });
-    res
+
+    // Send success response
+    return res
       .status(StatusCodes.CREATED)
-      .json({ message: "User created successfully", User: newUser });
+      .json({ message: "User created successfully", user: newUser });
+
   } catch (err) {
+    // Handle errors
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message });
   }
 };
+
 
 export const LoginUser = async (req, res) => {
   try {

@@ -52,16 +52,14 @@ router.get("/", createOrder);
 
 /**
  * @swagger
- * /api/shop/order/list/{userId}:
+ * /api/shop/order/list:
  *   get:
  *     tags: 
  *          - Order
  *     summary: Get all orders of a user
  *     description: Retrieves all orders placed by a specific user.
  *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
+ *     
  *         description: The unique identifier of the user
  *         schema:
  *           type: string
