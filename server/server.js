@@ -95,7 +95,10 @@ app.use(notFound)
 
 const startServer = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URL);
+        await mongoose.connect(process.env.MONGO_URL, {
+          replicaSet: "atlas-j098qx-shard-0", 
+          serverSelectionTimeoutMS: 5000,
+        });
         console.log("Connected to DATABASE");
         app.listen(process.env.PORT || 5000, () => {
             console.log(`Server is running on port ${process.env.PORT || 5000}`);
