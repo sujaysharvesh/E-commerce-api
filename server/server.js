@@ -78,15 +78,6 @@ app.use("/api/test", (req, res) => {
         res.status(500).send({ error: "Internal Server Error" });
     }
 });
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-// Recreate __dirname and __filename
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-console.log('Current directory:', __dirname);
-;
 
 
 app.use("/api/auth", AuthRouter);
